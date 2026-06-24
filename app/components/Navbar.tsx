@@ -47,7 +47,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled || !isHomePage
           ? "bg-cream/95 backdrop-blur-md shadow-lg shadow-dark-brown/5 py-3"
           : "bg-transparent py-5"
         }`}

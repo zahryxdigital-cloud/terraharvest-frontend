@@ -83,7 +83,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <StoreProvider>
           {children}
           <CartDrawer />
