@@ -68,8 +68,10 @@ function QuantityStepper({
 /* ─── Main Client Component ──────────────────────────────────────────────── */
 export default function ProductDetailClient({
   slug,
+  initialProduct,
 }: {
   slug: string;
+  initialProduct?: Product | null;
 }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
@@ -85,7 +87,10 @@ export default function ProductDetailClient({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user } = useAppSelector((state) => state.auth);
-  const { currentProduct: product, items: relatedProducts, loading } = useAppSelector((state) => state.product);
+  const { currentProduct: reduxProduct, items: relatedProducts, loading } = useAppSelector((state) => state.product);
+
+  const product = reduxProduct || initialProduct;
+  const showSkeleton = reduxProduct === null && loading && initialProduct === undefined;
 
   useEffect(() => {
     setMounted(true);
@@ -99,7 +104,7 @@ export default function ProductDetailClient({
     }
   }, [slug, dispatch]);
 
-  if (loading && !product) {
+  if (showSkeleton && !product) {
     return (
       <>
         <Navbar />

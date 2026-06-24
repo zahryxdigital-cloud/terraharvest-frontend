@@ -145,11 +145,18 @@ function ProductCard({
   );
 }
 
-export default function FeaturedProducts() {
+export default function FeaturedProducts({
+  initialProducts = [],
+}: {
+  initialProducts?: Product[];
+}) {
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerVisible, setHeaderVisible] = useState(false);
   const dispatch = useAppDispatch();
-  const { items: products, loading } = useSelector((state: RootState) => state.product);
+  const { items: reduxProducts, loading } = useSelector((state: RootState) => state.product);
+
+  const products = reduxProducts.length > 0 ? reduxProducts : initialProducts;
+  const showLoading = reduxProducts.length === 0 && loading && initialProducts.length === 0;
 
   useEffect(() => {
     // Only fetch if not already populated with featured or if we want to ensure freshness
@@ -199,7 +206,7 @@ export default function FeaturedProducts() {
         </div>
 
         {/* Asymmetrical Product Grid */}
-        {loading ? (
+        {showLoading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-burnt-orange"></div>
           </div>

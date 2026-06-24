@@ -5,11 +5,19 @@ import Image from "next/image";
 
 export default function Hero() {
   const parallaxRef = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      setOffset(window.scrollY * 0.4);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (parallaxRef.current) {
+            parallaxRef.current.style.transform = `translateY(${window.scrollY * 0.4}px)`;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -21,7 +29,7 @@ export default function Hero() {
       <div
         ref={parallaxRef}
         className="absolute inset-0 z-0"
-        style={{ transform: `translateY(${offset}px)` }}
+        style={{ transform: `translateY(0px)` }}
       >
         <Image
           src="/images/hero-banner.png"
@@ -38,11 +46,7 @@ export default function Hero() {
 
       {/* Grain texture overlay */}
       <div
-        className="absolute inset-0 z-15 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-        }}
+        className="absolute inset-0 z-15 opacity-[0.06] pointer-events-none bg-transparent"
       />
 
       {/* Content */}
